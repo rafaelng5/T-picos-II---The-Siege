@@ -1,7 +1,6 @@
 import pygame
 import random
 import math
-
 # Carregando as imagens.
 imagemNave = pygame.image.load('pngegg1.png')
 imagemAsteroide = pygame.image.load('pngegg (3).png ')
