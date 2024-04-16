@@ -2,29 +2,29 @@ import pygame
 import random
 import math
 # Carregando as imagens.
-imagemNave = pygame.image.load('pngegg1.png')
-imagemAsteroide = pygame.image.load('pngegg (3).png ')
-imagemRaio = pygame.image.load('espada.png')
+imagemPersonagem = pygame.image.load('pngegg1.png')
+imagemInimigo = pygame.image.load('pngegg (3).png ')
+imagemEspada = pygame.image.load('espada.png')
 imagemFundo = pygame.image.load('JOPK_Level_1_2.png')
 LARGURAJANELA = 600  # largura da janela
 ALTURAJANELA = 600  # altura da janela
 CORTEXTO = (255, 255, 255)  # cor do texto (branca)
 QPS = 40  # quadros por segundo
-TAMMINIMO = 40  # tamanho mínimo do asteroide
-TAMMAXIMO = 40  # tamanho máximo do asteroide
-VELMINIMA = 1  # velocidade mínima do asteroide
-VELMAXIMA = 8  # velocidade máxima do asteroide
-ITERACOES = 6  # número de iterações antes de criar um novo asteroide
+TAMMINIMO = 40  # tamanho mínimo do inimigo
+TAMMAXIMO = 40  # tamanho máximo do inimigo
+VELMINIMA = 1  # velocidade mínima do inimigo
+VELMAXIMA = 8  # velocidade máxima do inimigo
+ITERACOES = 6  # número de iterações antes de criar um novo inimigo
 VELJOGADOR = 5  # velocidade da nave
-VELASTEROIDE = 2  # velocidade dos asteroides
-VELRAIO = (0, -15)  # velocidade do raio
-LARGURANAVE = imagemNave.get_width()
-ALTURANAVE = imagemNave.get_height()
-LARGURARAIO = imagemRaio.get_width()
-ALTURARAIO = imagemRaio.get_height()
+VELINIMIGO = 2  # velocidade dos inimigos
+VELESPADA = (0, -15)  # velocidade do espada
+LARGURAPERSONAGEM = imagemPersonagem.get_width()
+ALTURAPERSONAGEM = imagemPersonagem.get_height()
+LARGURAESPADA = imagemEspada.get_width()
+ALTURAESPADA = imagemEspada.get_height()
 
 def calcular_posicao_inicial():
-    # Calcula a posição inicial do asteroide
+    # Calcula a posição inicial do inimigo
     direcoes = ['esquerda', 'direita', 'cima', 'baixo']
     direcao = random.choice(direcoes)
     if direcao == 'esquerda':
@@ -55,17 +55,17 @@ def moverJogador(jogador, teclas, dim_janela):
     if teclas['baixo'] and jogador['objRect'].bottom < borda_inferior:
         jogador['objRect'].y += jogador['vel']
 
-def calcular_angulo(jogador, asteroide):
-    delta_x = jogador['objRect'].centerx - asteroide['objRect'].centerx
-    delta_y = jogador['objRect'].centery - asteroide['objRect'].centery
+def calcular_angulo(jogador, inimigo):
+    delta_x = jogador['objRect'].centerx - inimigo['objRect'].centerx
+    delta_y = jogador['objRect'].centery - inimigo['objRect'].centery
     return math.atan2(delta_y, delta_x)
 
-def moverAsteroide(asteroide, jogador):
-    angulo = calcular_angulo(jogador, asteroide)
-    vel_x = VELASTEROIDE * math.cos(angulo)
-    vel_y = VELASTEROIDE * math.sin(angulo)
-    asteroide['objRect'].x += vel_x
-    asteroide['objRect'].y += vel_y
+def moverinimigo(inimigo, jogador):
+    angulo = calcular_angulo(jogador, inimigo)
+    vel_x = VELINIMIGO * math.cos(angulo)
+    vel_y = VELINIMIGO * math.sin(angulo)
+    inimigo['objRect'].x += vel_x
+    inimigo['objRect'].y += vel_y
 
 def terminar():
     pygame.quit()
@@ -109,8 +109,8 @@ aguardarEntrada()
 recorde = 0
 
 while True:
-    asteroides = []
-    raios = []
+    inimigos = []
+    espadas = []
     pontuacao = 0
     deve_continuar = True
     teclas = {}
@@ -120,7 +120,7 @@ while True:
 
     posX = LARGURAJANELA / 2
     posY = ALTURAJANELA - 50
-    jogador = {'objRect': pygame.Rect(posX, posY, LARGURANAVE, ALTURANAVE), 'imagem': imagemNave, 'vel': VELJOGADOR}
+    jogador = {'objRect': pygame.Rect(posX, posY, LARGURAPERSONAGEM, ALTURAPERSONAGEM), 'imagem': imagemPersonagem, 'vel': VELJOGADOR}
 
     while deve_continuar:
         pontuacao += 1
@@ -142,10 +142,10 @@ while True:
                 if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
                     teclas['baixo'] = True
                 if evento.key == pygame.K_SPACE:
-                    raio = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURARAIO, ALTURARAIO),
-                            'imagem': imagemRaio,
-                            'vel': VELRAIO}
-                    raios.append(raio)
+                    espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURAESPADA, ALTURAESPADA),
+                            'imagem': imagemEspada,
+                            'vel': VELESPADA}
+                    espadas.append(espada)
                     somTiro.play()
             if evento.type == pygame.KEYUP:
                 if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
@@ -161,10 +161,10 @@ while True:
                 centroY_jogador = jogador['objRect'].centery
                 jogador['objRect'].move_ip(evento.pos[0] - centroX_jogador, evento.pos[1] - centroY_jogador)
             if evento.type == pygame.MOUSEBUTTONDOWN:
-                raio = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURARAIO, ALTURARAIO),
-                        'imagem': imagemRaio,
-                        'vel': VELRAIO}
-                raios.append(raio)
+                espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURAESPADA, ALTURAESPADA),
+                        'imagem': imagemEspada,
+                        'vel': VELESPADA}
+                espadas.append(espada)
                 somTiro.play()
 
         janela.blit(imagemFundoRedim, (0,0))
@@ -175,45 +175,45 @@ while True:
         contador += 1
         if contador >= ITERACOES:
             contador = 0
-            tamAsteroide = random.randint(TAMMINIMO, TAMMAXIMO)
+            tamIminigo = random.randint(TAMMINIMO, TAMMAXIMO)
             pos_x, pos_y = calcular_posicao_inicial()
-            asteroide = {'objRect': pygame.Rect(pos_x, pos_y, tamAsteroide, tamAsteroide),
-                         'imagem': pygame.transform.scale(imagemAsteroide, (tamAsteroide, tamAsteroide)),
+            inimigo = {'objRect': pygame.Rect(pos_x, pos_y, tamIminigo, tamIminigo),
+                         'imagem': pygame.transform.scale(imagemInimigo, (tamIminigo, tamIminigo)),
                          'vel': (random.randint(-1,1), random.randint(VELMINIMA, VELMAXIMA))}
-            asteroides.append(asteroide)
+            inimigos.append(inimigo)
 
-        for asteroide in asteroides:
-            moverAsteroide(asteroide, jogador)
-            janela.blit(asteroide['imagem'], asteroide['objRect'])
+        for inimigo in inimigos:
+            moverinimigo(inimigo, jogador)
+            janela.blit(inimigo['imagem'], inimigo['objRect'])
 
-        for asteroide in asteroides[:]:
-            topo_asteroide = asteroide['objRect'].top
-            if topo_asteroide > ALTURAJANELA:
-                asteroides.remove(asteroide)
+        for inimigo in inimigos[:]:
+            topo_inimigo = inimigo['objRect'].top
+            if topo_inimigo > ALTURAJANELA:
+                inimigos.remove(inimigo)
 
-        for raio in raios:
-            raio['objRect'].y += raio['vel'][1]
-            janela.blit(raio['imagem'], raio['objRect'])
+        for espada in espadas:
+            espada['objRect'].y += espada['vel'][1]
+            janela.blit(espada['imagem'], espada['objRect'])
 
-        for raio in raios[:]:
-            base_raio = raio['objRect'].bottom
-            if base_raio < 0:
-                raios.remove(raio)
+        for espada in espadas[:]:
+            base_espada = espada['objRect'].bottom
+            if base_espada < 0:
+                espadas.remove(espada)
 
         moverJogador(jogador, teclas, (LARGURAJANELA, ALTURAJANELA))
         janela.blit(jogador['imagem'], jogador['objRect'])
 
-        for asteroide in asteroides[:]:
-            jogadorColidiu = jogador['objRect'].colliderect(asteroide['objRect'])
+        for inimigo in inimigos[:]:
+            jogadorColidiu = jogador['objRect'].colliderect(inimigo['objRect'])
             if jogadorColidiu:
                 if pontuacao > recorde:
                     recorde = pontuacao
                 deve_continuar = False
-            for raio in raios[:]:
-                raioColidiu = raio['objRect'].colliderect(asteroide['objRect'])
-                if raioColidiu:
-                    raios.remove(raio)
-                    asteroides.remove(asteroide)
+            for espada in espadas[:]:
+                espadaColidiu = espada['objRect'].colliderect(inimigo['objRect'])
+                if espadaColidiu:
+                    espadas.remove(espada)
+                    inimigos.remove(inimigo)
 
         pygame.display.update()
         relogio.tick(QPS)
