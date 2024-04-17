@@ -133,40 +133,49 @@ while True:
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:
                     terminar()
-                if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
+                if evento.key == pygame.K_a:
                     teclas['esquerda'] = True
-                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
+                if evento.key == pygame.K_d:
                     teclas['direita'] = True
-                if evento.key == pygame.K_UP or evento.key == pygame.K_w:
+                if evento.key == pygame.K_w:
                     teclas['cima'] = True
-                if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
+                if evento.key == pygame.K_s:
                     teclas['baixo'] = True
-                if evento.key == pygame.K_SPACE:
+                if evento.key == pygame.K_UP:
                     espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURAESPADA, ALTURAESPADA),
                             'imagem': imagemEspada,
                             'vel': VELESPADA}
                     espadas.append(espada)
                     somTiro.play()
+                if evento.key == pygame.K_RIGHT:
+                    espada = {'objRect': pygame.Rect(jogador['objRect'].right, jogador['objRect'].centery, LARGURAESPADA, ALTURAESPADA),
+                            'imagem': imagemEspada,
+                            'vel': VELESPADA}
+                    espadas.append(espada)
+                    somTiro.play()
+                if evento.key == pygame.K_DOWN:
+                    espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].bottom, LARGURAESPADA, ALTURAESPADA),
+                            'imagem': imagemEspada,
+                            'vel': VELESPADA}
+                    espadas.append(espada)
+                    somTiro.play()
+                if evento.key == pygame.K_LEFT:
+                    espada = {'objRect': pygame.Rect(jogador['objRect'].left, jogador['objRect'].centery, LARGURAESPADA, ALTURAESPADA),
+                            'imagem': imagemEspada,
+                            'vel': VELESPADA}
+                    espadas.append(espada)
+                    somTiro.play()
+                
             if evento.type == pygame.KEYUP:
-                if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
+                if evento.key == pygame.K_a:
                     teclas['esquerda'] = False
-                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
+                if evento.key == pygame.K_d:
                     teclas['direita'] = False
-                if evento.key == pygame.K_UP or evento.key == pygame.K_w:
+                if evento.key == pygame.K_w:
                     teclas['cima'] = False
-                if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
+                if evento.key == pygame.K_s:
                     teclas['baixo'] = False
-            if evento.type == pygame.MOUSEMOTION:
-                centroX_jogador = jogador['objRect'].centerx
-                centroY_jogador = jogador['objRect'].centery
-                jogador['objRect'].move_ip(evento.pos[0] - centroX_jogador, evento.pos[1] - centroY_jogador)
-            if evento.type == pygame.MOUSEBUTTONDOWN:
-                espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURAESPADA, ALTURAESPADA),
-                        'imagem': imagemEspada,
-                        'vel': VELESPADA}
-                espadas.append(espada)
-                somTiro.play()
-
+            
         janela.blit(imagemFundoRedim, (0,0))
 
         colocarTexto('Pontuação: ' + str(pontuacao), fonte, janela, 10, 0)
@@ -192,8 +201,9 @@ while True:
                 inimigos.remove(inimigo)
 
         for espada in espadas:
-            espada['objRect'].y += espada['vel'][1]
-            janela.blit(espada['imagem'], espada['objRect'])
+                espada['objRect'].y += espada['vel'][1]
+                janela.blit(espada['imagem'], espada['objRect'])
+            
 
         for espada in espadas[:]:
             base_espada = espada['objRect'].bottom
