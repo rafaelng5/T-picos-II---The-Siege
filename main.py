@@ -6,6 +6,9 @@ import math
 imagemPersonagem = pygame.image.load('pngegg1.png')
 imagemInimigo = pygame.image.load('pngegg (3).png')
 imagemEspada = pygame.image.load('espada.png')
+imagemEspadaDireita = pygame.image.load('espada_direita.png')
+imagemEspadaEsquerda = pygame.image.load('espada_esquerda.png')
+imagemEspadaBaixo = pygame.image.load('espada_baixo.png')
 imagemFundo = pygame.image.load('JOPK_Level_1_2.png')
 
 LARGURAJANELA = 600  # largura da janela
@@ -172,21 +175,21 @@ while True:
                 if evento.key == pygame.K_RIGHT:
                     espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, LARGURAESPADA,
                                                      ALTURAESPADA),
-                              'imagem': imagemEspada,
+                              'imagem': imagemEspadaDireita,
                               'vel': (15, 0)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_DOWN:
                     espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, LARGURAESPADA,
                                                      ALTURAESPADA),
-                              'imagem': imagemEspada,
+                              'imagem': imagemEspadaBaixo,
                               'vel': (0, 15)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_LEFT:
                     espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, LARGURAESPADA,
                                                      ALTURAESPADA),
-                              'imagem': imagemEspada,
+                              'imagem': imagemEspadaEsquerda, 
                               'vel': (-15, 0)}
                     espadas.append(espada)
                     somTiro.play()
