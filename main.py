@@ -1,11 +1,13 @@
 import pygame
 import random
 import math
+
 # Carregando as imagens.
 imagemPersonagem = pygame.image.load('pngegg1.png')
-imagemInimigo = pygame.image.load('pngegg (3).png ')
+imagemInimigo = pygame.image.load('pngegg (3).png')
 imagemEspada = pygame.image.load('espada.png')
 imagemFundo = pygame.image.load('JOPK_Level_1_2.png')
+
 LARGURAJANELA = 600  # largura da janela
 ALTURAJANELA = 600  # altura da janela
 CORTEXTO = (255, 255, 255)  # cor do texto (branca)
@@ -18,10 +20,12 @@ ITERACOES = 6  # número de iterações antes de criar um novo inimigo
 VELJOGADOR = 5  # velocidade da nave
 VELINIMIGO = 2  # velocidade dos inimigos
 VELESPADA = (0, -15)  # velocidade do espada
+
 LARGURAPERSONAGEM = imagemPersonagem.get_width()
 ALTURAPERSONAGEM = imagemPersonagem.get_height()
 LARGURAESPADA = imagemEspada.get_width()
 ALTURAESPADA = imagemEspada.get_height()
+
 
 def calcular_posicao_inicial():
     # Calcula a posição inicial do inimigo
@@ -41,35 +45,52 @@ def calcular_posicao_inicial():
         pos_y = ALTURAJANELA + 96
     return pos_x, pos_y
 
-def moverJogador(jogador, teclas, dim_janela):
-    borda_esquerda = 0
-    borda_superior = 0
-    borda_direita = dim_janela[0]
-    borda_inferior = dim_janela[1]
-    if teclas['esquerda'] and jogador['objRect'].left > borda_esquerda:
-        jogador['objRect'].x -= jogador['vel']
-    if teclas['direita'] and jogador['objRect'].right < borda_direita:
-        jogador['objRect'].x += jogador['vel']
-    if teclas['cima'] and jogador['objRect'].top > borda_superior:
-        jogador['objRect'].y -= jogador['vel']
-    if teclas['baixo'] and jogador['objRect'].bottom < borda_inferior:
-        jogador['objRect'].y += jogador['vel']
+
+class Personagem:
+    def __init__(self, imagem, pos_x, pos_y, largura, altura, velocidade):
+        self.imagem = imagem
+        self.rect = pygame.Rect(pos_x, pos_y, largura, altura)
+        self.velocidade = velocidade
+
+    def mover(self, teclas, dim_janela):
+        borda_esquerda = 0
+        borda_superior = 0
+        borda_direita = dim_janela[0]
+        borda_inferior = dim_janela[1]
+        if teclas['esquerda'] and self.rect.left > borda_esquerda:
+            self.rect.x -= self.velocidade
+        if teclas['direita'] and self.rect.right < borda_direita:
+            self.rect.x += self.velocidade
+        if teclas['cima'] and self.rect.top > borda_superior:
+            self.rect.y -= self.velocidade
+        if teclas['baixo'] and self.rect.bottom < borda_inferior:
+            self.rect.y += self.velocidade
+
+
+class Inimigo:
+    def __init__(self, imagem, pos_x, pos_y, tamanho, velocidade):
+        self.imagem = pygame.transform.scale(imagem, (tamanho, tamanho))
+        self.rect = pygame.Rect(pos_x, pos_y, tamanho, tamanho)
+        self.velocidade = velocidade
+
+    def mover(self, jogador):
+        angulo = calcular_angulo(jogador, self)
+        vel_x = self.velocidade * math.cos(angulo)
+        vel_y = self.velocidade * math.sin(angulo)
+        self.rect.x += vel_x
+        self.rect.y += vel_y
+
 
 def calcular_angulo(jogador, inimigo):
-    delta_x = jogador['objRect'].centerx - inimigo['objRect'].centerx
-    delta_y = jogador['objRect'].centery - inimigo['objRect'].centery
+    delta_x = jogador.rect.centerx - inimigo.rect.centerx
+    delta_y = jogador.rect.centery - inimigo.rect.centery
     return math.atan2(delta_y, delta_x)
 
-def moverinimigo(inimigo, jogador):
-    angulo = calcular_angulo(jogador, inimigo)
-    vel_x = VELINIMIGO * math.cos(angulo)
-    vel_y = VELINIMIGO * math.sin(angulo)
-    inimigo['objRect'].x += vel_x
-    inimigo['objRect'].y += vel_y
 
 def terminar():
     pygame.quit()
     exit()
+
 
 def aguardarEntrada():
     while True:
@@ -81,11 +102,13 @@ def aguardarEntrada():
                     terminar()
                 return
 
+
 def colocarTexto(texto, fonte, janela, x, y):
     objTexto = fonte.render(texto, True, CORTEXTO)
     rectTexto = objTexto.get_rect()
     rectTexto.topleft = (x, y)
     janela.blit(objTexto, rectTexto)
+
 
 pygame.init()
 relogio = pygame.time.Clock()
@@ -98,12 +121,12 @@ imagemFundoRedim = pygame.transform.scale(imagemFundo, (LARGURAJANELA, ALTURAJAN
 fonte = pygame.font.Font(None, 48)
 
 somFinal = pygame.mixer.Sound('bach-violin-concerto-in-a-minor-3-movement-bwv-1041-183738.mp3')
-somRecorde =  pygame.mixer.Sound('blaster-2-81267.mp3')
-somTiro =  pygame.mixer.Sound('metal-blade-slice-26-195295.mp3')
+somRecorde = pygame.mixer.Sound('blaster-2-81267.mp3')
+somTiro = pygame.mixer.Sound('metal-blade-slice-26-195295.mp3')
 pygame.mixer.music.load('the-happy-end-of-a-vintage-western-147522.mp3')
 
 colocarTexto('The siegE', fonte, janela, LARGURAJANELA / 5, ALTURAJANELA / 3)
-colocarTexto('Pressione uma tecla para começar.', fonte, janela, LARGURAJANELA / 20 , ALTURAJANELA / 2)
+colocarTexto('Pressione uma tecla para começar.', fonte, janela, LARGURAJANELA / 20, ALTURAJANELA / 2)
 pygame.display.update()
 aguardarEntrada()
 recorde = 0
@@ -120,7 +143,7 @@ while True:
 
     posX = LARGURAJANELA / 2
     posY = ALTURAJANELA - 50
-    jogador = {'objRect': pygame.Rect(posX, posY, LARGURAPERSONAGEM, ALTURAPERSONAGEM), 'imagem': imagemPersonagem, 'vel': VELJOGADOR}
+    jogador = Personagem(imagemPersonagem, posX, posY, LARGURAPERSONAGEM, ALTURAPERSONAGEM, VELJOGADOR)
 
     while deve_continuar:
         pontuacao += 1
@@ -142,30 +165,34 @@ while True:
                 if evento.key == pygame.K_s:
                     teclas['baixo'] = True
                 if evento.key == pygame.K_UP:
-                    espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURAESPADA, ALTURAESPADA),
-                            'imagem': imagemEspada,
-                            'vel': VELESPADA}
+                    espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.top, LARGURAESPADA,
+                                                     ALTURAESPADA),
+                              'imagem': imagemEspada,
+                              'vel': VELESPADA}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_RIGHT:
-                    espada = {'objRect': pygame.Rect(jogador['objRect'].right, jogador['objRect'].centery, LARGURAESPADA, ALTURAESPADA),
-                            'imagem': imagemEspada,
-                            'vel': VELESPADA}
+                    espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, LARGURAESPADA,
+                                                     ALTURAESPADA),
+                              'imagem': imagemEspada,
+                              'vel': VELESPADA}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_DOWN:
-                    espada = {'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].bottom, LARGURAESPADA, ALTURAESPADA),
-                            'imagem': imagemEspada,
-                            'vel': VELESPADA}
+                    espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, LARGURAESPADA,
+                                                     ALTURAESPADA),
+                              'imagem': imagemEspada,
+                              'vel': VELESPADA}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_LEFT:
-                    espada = {'objRect': pygame.Rect(jogador['objRect'].left, jogador['objRect'].centery, LARGURAESPADA, ALTURAESPADA),
-                            'imagem': imagemEspada,
-                            'vel': VELESPADA}
+                    espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, LARGURAESPADA,
+                                                     ALTURAESPADA),
+                              'imagem': imagemEspada,
+                              'vel': VELESPADA}
                     espadas.append(espada)
                     somTiro.play()
-                
+
             if evento.type == pygame.KEYUP:
                 if evento.key == pygame.K_a:
                     teclas['esquerda'] = False
@@ -175,8 +202,8 @@ while True:
                     teclas['cima'] = False
                 if evento.key == pygame.K_s:
                     teclas['baixo'] = False
-            
-        janela.blit(imagemFundoRedim, (0,0))
+
+        janela.blit(imagemFundoRedim, (0, 0))
 
         colocarTexto('Pontuação: ' + str(pontuacao), fonte, janela, 10, 0)
         colocarTexto('Recorde: ' + str(recorde), fonte, janela, 10, 40)
@@ -184,43 +211,40 @@ while True:
         contador += 1
         if contador >= ITERACOES:
             contador = 0
-            tamIminigo = random.randint(TAMMINIMO, TAMMAXIMO)
+            tamInimigo = random.randint(TAMMINIMO, TAMMAXIMO)
             pos_x, pos_y = calcular_posicao_inicial()
-            inimigo = {'objRect': pygame.Rect(pos_x, pos_y, tamIminigo, tamIminigo),
-                         'imagem': pygame.transform.scale(imagemInimigo, (tamIminigo, tamIminigo)),
-                         'vel': (random.randint(-1,1), random.randint(VELMINIMA, VELMAXIMA))}
+            inimigo = Inimigo(imagemInimigo, pos_x, pos_y, tamInimigo, random.randint(VELMINIMA, VELMAXIMA))
             inimigos.append(inimigo)
 
         for inimigo in inimigos:
-            moverinimigo(inimigo, jogador)
-            janela.blit(inimigo['imagem'], inimigo['objRect'])
+            inimigo.mover(jogador)
+            janela.blit(inimigo.imagem, inimigo.rect)
 
         for inimigo in inimigos[:]:
-            topo_inimigo = inimigo['objRect'].top
+            topo_inimigo = inimigo.rect.top
             if topo_inimigo > ALTURAJANELA:
                 inimigos.remove(inimigo)
 
         for espada in espadas:
-                espada['objRect'].y += espada['vel'][1]
-                janela.blit(espada['imagem'], espada['objRect'])
-            
+            espada['objRect'].y += espada['vel'][1]
+            janela.blit(espada['imagem'], espada['objRect'])
 
         for espada in espadas[:]:
             base_espada = espada['objRect'].bottom
             if base_espada < 0:
                 espadas.remove(espada)
 
-        moverJogador(jogador, teclas, (LARGURAJANELA, ALTURAJANELA))
-        janela.blit(jogador['imagem'], jogador['objRect'])
+        jogador.mover(teclas, (LARGURAJANELA, ALTURAJANELA))
+        janela.blit(jogador.imagem, jogador.rect)
 
         for inimigo in inimigos[:]:
-            jogadorColidiu = jogador['objRect'].colliderect(inimigo['objRect'])
+            jogadorColidiu = jogador.rect.colliderect(inimigo.rect)
             if jogadorColidiu:
                 if pontuacao > recorde:
                     recorde = pontuacao
                 deve_continuar = False
             for espada in espadas[:]:
-                espadaColidiu = espada['objRect'].colliderect(inimigo['objRect'])
+                espadaColidiu = espada['objRect'].colliderect(inimigo.rect)
                 if espadaColidiu:
                     espadas.remove(espada)
                     inimigos.remove(inimigo)
