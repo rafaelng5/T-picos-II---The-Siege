@@ -18,8 +18,6 @@ VELMINIMA = 1  # velocidade mínima do inimigo
 VELMAXIMA = 8  # velocidade máxima do inimigo
 ITERACOES = 6  # número de iterações antes de criar um novo inimigo
 VELJOGADOR = 5  # velocidade da nave
-VELINIMIGO = 2  # velocidade dos inimigos
-VELESPADA = (0, -15)  # velocidade do espada
 
 LARGURAPERSONAGEM = imagemPersonagem.get_width()
 ALTURAPERSONAGEM = imagemPersonagem.get_height()
@@ -168,28 +166,28 @@ while True:
                     espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.top, LARGURAESPADA,
                                                      ALTURAESPADA),
                               'imagem': imagemEspada,
-                              'vel': VELESPADA}
+                              'vel': (0, -15)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_RIGHT:
                     espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, LARGURAESPADA,
                                                      ALTURAESPADA),
                               'imagem': imagemEspada,
-                              'vel': VELESPADA}
+                              'vel': (15, 0)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_DOWN:
                     espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, LARGURAESPADA,
                                                      ALTURAESPADA),
                               'imagem': imagemEspada,
-                              'vel': VELESPADA}
+                              'vel': (0, 15)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_LEFT:
                     espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, LARGURAESPADA,
                                                      ALTURAESPADA),
                               'imagem': imagemEspada,
-                              'vel': VELESPADA}
+                              'vel': (-15, 0)}
                     espadas.append(espada)
                     somTiro.play()
 
@@ -226,12 +224,14 @@ while True:
                 inimigos.remove(inimigo)
 
         for espada in espadas:
+            espada['objRect'].x += espada['vel'][0]
             espada['objRect'].y += espada['vel'][1]
             janela.blit(espada['imagem'], espada['objRect'])
 
         for espada in espadas[:]:
             base_espada = espada['objRect'].bottom
-            if base_espada < 0:
+            if base_espada < 0 or espada['objRect'].top > ALTURAJANELA or espada['objRect'].right < 0 or espada[
+                'objRect'].left > LARGURAJANELA:
                 espadas.remove(espada)
 
         jogador.mover(teclas, (LARGURAJANELA, ALTURAJANELA))
