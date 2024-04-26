@@ -1,6 +1,8 @@
 import pygame
 import random
 import math
+import Constantes
+
 
 # Carregando as imagens.
 imagemPersonagem = pygame.image.load('pngegg1.png')
@@ -11,21 +13,10 @@ imagemEspadaEsquerda = pygame.image.load('espada_esquerda.png')
 imagemEspadaBaixo = pygame.image.load('espada_baixo.png')
 imagemFundo = pygame.image.load('JOPK_Level_1_2.png')
 
-LARGURAJANELA = 600  # largura da janela
-ALTURAJANELA = 600  # altura da janela
-CORTEXTO = (255, 255, 255)  # cor do texto (branca)
-QPS = 60  # quadros por segundo
-TAMMINIMO = 40  # tamanho mínimo do inimigo
-TAMMAXIMO = 40  # tamanho máximo do inimigo
-VELMINIMA = 1  # velocidade mínima do inimigo
-VELMAXIMA = 8  # velocidade máxima do inimigo
-ITERACOES = 6  # número de iterações antes de criar um novo inimigo
-VELJOGADOR = 5  # velocidade da nave
-
-LARGURAPERSONAGEM = imagemPersonagem.get_width()
-ALTURAPERSONAGEM = imagemPersonagem.get_height()
-LARGURAESPADA = imagemEspada.get_width()
-ALTURAESPADA = imagemEspada.get_height()
+Constantes.LARGURAPERSONAGEM = imagemPersonagem.get_width()
+Constantes.ALTURAPERSONAGEM = imagemPersonagem.get_height()
+Constantes.LARGURAESPADA = imagemEspada.get_width()
+Constantes.ALTURAESPADA = imagemEspada.get_height()
 
 
 def calcular_posicao_inicial():
@@ -34,16 +25,16 @@ def calcular_posicao_inicial():
     direcao = random.choice(direcoes)
     if direcao == 'esquerda':
         pos_x = -96
-        pos_y = random.randint(204, ALTURAJANELA - 204)
+        pos_y = random.randint(204, Constantes.ALTURAJANELA - 204)
     elif direcao == 'direita':
-        pos_x = LARGURAJANELA + 96
-        pos_y = random.randint(204, ALTURAJANELA - 204)
+        pos_x = Constantes.LARGURAJANELA + 96
+        pos_y = random.randint(204, Constantes.ALTURAJANELA - 204)
     elif direcao == 'cima':
-        pos_x = random.randint(204, LARGURAJANELA - 204)
+        pos_x = random.randint(204, Constantes.LARGURAJANELA - 204)
         pos_y = -96
     else:
-        pos_x = random.randint(204, LARGURAJANELA - 204)
-        pos_y = ALTURAJANELA + 96
+        pos_x = random.randint(204, Constantes.LARGURAJANELA - 204)
+        pos_y = Constantes.ALTURAJANELA + 96
     return pos_x, pos_y
 
 
@@ -105,7 +96,7 @@ def aguardarEntrada():
 
 
 def colocarTexto(texto, fonte, janela, x, y):
-    objTexto = fonte.render(texto, True, CORTEXTO)
+    objTexto = fonte.render(texto, True, Constantes.CORTEXTO)
     rectTexto = objTexto.get_rect()
     rectTexto.topleft = (x, y)
     janela.blit(objTexto, rectTexto)
@@ -113,11 +104,11 @@ def colocarTexto(texto, fonte, janela, x, y):
 
 pygame.init()
 relogio = pygame.time.Clock()
-janela = pygame.display.set_mode((LARGURAJANELA, ALTURAJANELA))
+janela = pygame.display.set_mode((Constantes.LARGURAJANELA, Constantes.ALTURAJANELA))
 pygame.display.set_caption('The siegE')
 
 pygame.mouse.set_visible(False)
-imagemFundoRedim = pygame.transform.scale(imagemFundo, (LARGURAJANELA, ALTURAJANELA))
+imagemFundoRedim = pygame.transform.scale(imagemFundo, (Constantes.LARGURAJANELA, Constantes.ALTURAJANELA))
 
 fonte = pygame.font.Font(None, 48)
 
@@ -126,8 +117,8 @@ somRecorde = pygame.mixer.Sound('blaster-2-81267.mp3')
 somTiro = pygame.mixer.Sound('metal-blade-slice-26-195295.mp3')
 pygame.mixer.music.load('the-happy-end-of-a-vintage-western-147522.mp3')
 
-colocarTexto('The siegE', fonte, janela, LARGURAJANELA / 5, ALTURAJANELA / 3)
-colocarTexto('Pressione uma tecla para começar.', fonte, janela, LARGURAJANELA / 20, ALTURAJANELA / 2)
+colocarTexto('The siegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
+colocarTexto('Pressione uma tecla para começar.', fonte, janela, Constantes.LARGURAJANELA / 20, Constantes.ALTURAJANELA / 2)
 pygame.display.update()
 aguardarEntrada()
 recorde = 0
@@ -142,9 +133,9 @@ while True:
     contador = 0
     pygame.mixer.music.play(-1, 0.0)
 
-    posX = LARGURAJANELA / 2
-    posY = ALTURAJANELA - 50
-    jogador = Personagem(imagemPersonagem, posX, posY, LARGURAPERSONAGEM, ALTURAPERSONAGEM, VELJOGADOR)
+    posX = Constantes.LARGURAJANELA / 2
+    posY = Constantes.ALTURAJANELA - 50
+    jogador = Personagem(imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
 
     while deve_continuar:
         pontuacao += 1
@@ -166,29 +157,29 @@ while True:
                 if evento.key == pygame.K_s:
                     teclas['baixo'] = True
                 if evento.key == pygame.K_UP:
-                    espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.top, LARGURAESPADA,
-                                                     ALTURAESPADA),
+                    espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.top, Constantes.LARGURAESPADA,
+                                                     Constantes.ALTURAESPADA),
                               'imagem': imagemEspada,
                               'vel': (0, -15)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_RIGHT:
-                    espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, LARGURAESPADA,
-                                                     ALTURAESPADA),
+                    espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, Constantes.LARGURAESPADA,
+                                                     Constantes.ALTURAESPADA),
                               'imagem': imagemEspadaDireita,
                               'vel': (15, 0)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_DOWN:
-                    espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, LARGURAESPADA,
-                                                     ALTURAESPADA),
+                    espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, Constantes.LARGURAESPADA,
+                                                     Constantes.ALTURAESPADA),
                               'imagem': imagemEspadaBaixo,
                               'vel': (0, 15)}
                     espadas.append(espada)
                     somTiro.play()
                 if evento.key == pygame.K_LEFT:
-                    espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, LARGURAESPADA,
-                                                     ALTURAESPADA),
+                    espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, Constantes.LARGURAESPADA,
+                                                     Constantes.ALTURAESPADA),
                               'imagem': imagemEspadaEsquerda, 
                               'vel': (-15, 0)}
                     espadas.append(espada)
@@ -210,11 +201,11 @@ while True:
         colocarTexto('Recorde: ' + str(recorde), fonte, janela, 10, 40)
 
         contador += 1
-        if contador >= ITERACOES:
+        if contador >= Constantes.ITERACOES:
             contador = 0
-            tamInimigo = random.randint(TAMMINIMO, TAMMAXIMO)
+            tamInimigo = random.randint(Constantes.TAMMINIMO, Constantes.TAMMAXIMO)
             pos_x, pos_y = calcular_posicao_inicial()
-            inimigo = Inimigo(imagemInimigo, pos_x, pos_y, tamInimigo, random.randint(VELMINIMA, VELMAXIMA))
+            inimigo = Inimigo(imagemInimigo, pos_x, pos_y, tamInimigo, random.randint(Constantes.VELMINIMA, Constantes.VELMAXIMA))
             inimigos.append(inimigo)
 
         for inimigo in inimigos:
@@ -223,7 +214,7 @@ while True:
 
         for inimigo in inimigos[:]:
             topo_inimigo = inimigo.rect.top
-            if topo_inimigo > ALTURAJANELA:
+            if topo_inimigo > Constantes.ALTURAJANELA:
                 inimigos.remove(inimigo)
 
         for espada in espadas:
@@ -233,11 +224,11 @@ while True:
 
         for espada in espadas[:]:
             base_espada = espada['objRect'].bottom
-            if base_espada < 0 or espada['objRect'].top > ALTURAJANELA or espada['objRect'].right < 0 or espada[
-                'objRect'].left > LARGURAJANELA:
+            if base_espada < 0 or espada['objRect'].top > Constantes.ALTURAJANELA or espada['objRect'].right < 0 or espada[
+                'objRect'].left > Constantes.LARGURAJANELA:
                 espadas.remove(espada)
 
-        jogador.mover(teclas, (LARGURAJANELA, ALTURAJANELA))
+        jogador.mover(teclas, (Constantes.LARGURAJANELA, Constantes.ALTURAJANELA))
         janela.blit(jogador.imagem, jogador.rect)
 
         for inimigo in inimigos[:]:
@@ -253,12 +244,12 @@ while True:
                     inimigos.remove(inimigo)
 
         pygame.display.update()
-        relogio.tick(QPS)
+        relogio.tick(Constantes.QPS)
 
     pygame.mixer.music.stop()
     somFinal.play()
-    colocarTexto('GAME OVER', fonte, janela, (LARGURAJANELA / 3), (ALTURAJANELA / 3))
-    colocarTexto('Pressione uma tecla para jogar.', fonte, janela, (LARGURAJANELA / 10), (ALTURAJANELA / 2))
+    colocarTexto('GAME OVER', fonte, janela, (Constantes.LARGURAJANELA / 3), (Constantes.ALTURAJANELA / 3))
+    colocarTexto('Pressione uma tecla para jogar.', fonte, janela, (Constantes.LARGURAJANELA / 10), (Constantes.ALTURAJANELA / 2))
     pygame.display.update()
     aguardarEntrada()
     somFinal.stop()
