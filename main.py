@@ -2,6 +2,8 @@ import pygame
 import random
 import math
 import Constantes
+import Procedimentos
+import Classes
 
 
 # Carregando as imagens.
@@ -19,89 +21,6 @@ Constantes.LARGURAESPADA = imagemEspada.get_width()
 Constantes.ALTURAESPADA = imagemEspada.get_height()
 
 
-def calcular_posicao_inicial():
-    # Calcula a posição inicial do inimigo
-    direcoes = ['esquerda', 'direita', 'cima', 'baixo']
-    direcao = random.choice(direcoes)
-    if direcao == 'esquerda':
-        pos_x = -96
-        pos_y = random.randint(204, Constantes.ALTURAJANELA - 204)
-    elif direcao == 'direita':
-        pos_x = Constantes.LARGURAJANELA + 96
-        pos_y = random.randint(204, Constantes.ALTURAJANELA - 204)
-    elif direcao == 'cima':
-        pos_x = random.randint(204, Constantes.LARGURAJANELA - 204)
-        pos_y = -96
-    else:
-        pos_x = random.randint(204, Constantes.LARGURAJANELA - 204)
-        pos_y = Constantes.ALTURAJANELA + 96
-    return pos_x, pos_y
-
-
-class Personagem:
-    def __init__(self, imagem, pos_x, pos_y, largura, altura, velocidade):
-        self.imagem = imagem
-        self.rect = pygame.Rect(pos_x, pos_y, largura, altura)
-        self.velocidade = velocidade
-
-    def mover(self, teclas, dim_janela):
-        borda_esquerda = 0
-        borda_superior = 0
-        borda_direita = dim_janela[0]
-        borda_inferior = dim_janela[1]
-        if teclas['esquerda'] and self.rect.left > borda_esquerda:
-            self.rect.x -= self.velocidade
-        if teclas['direita'] and self.rect.right < borda_direita:
-            self.rect.x += self.velocidade
-        if teclas['cima'] and self.rect.top > borda_superior:
-            self.rect.y -= self.velocidade
-        if teclas['baixo'] and self.rect.bottom < borda_inferior:
-            self.rect.y += self.velocidade
-
-
-class Inimigo:
-    def __init__(self, imagem, pos_x, pos_y, tamanho, velocidade):
-        self.imagem = pygame.transform.scale(imagem, (tamanho, tamanho))
-        self.rect = pygame.Rect(pos_x, pos_y, tamanho, tamanho)
-        self.velocidade = velocidade
-
-    def mover(self, jogador):
-        angulo = calcular_angulo(jogador, self)
-        vel_x = self.velocidade * math.cos(angulo)
-        vel_y = self.velocidade * math.sin(angulo)
-        self.rect.x += vel_x
-        self.rect.y += vel_y
-
-
-def calcular_angulo(jogador, inimigo):
-    delta_x = jogador.rect.centerx - inimigo.rect.centerx
-    delta_y = jogador.rect.centery - inimigo.rect.centery
-    return math.atan2(delta_y, delta_x)
-
-
-def terminar():
-    pygame.quit()
-    exit()
-
-
-def aguardarEntrada():
-    while True:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                terminar()
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_ESCAPE:
-                    terminar()
-                return
-
-
-def colocarTexto(texto, fonte, janela, x, y):
-    objTexto = fonte.render(texto, True, Constantes.CORTEXTO)
-    rectTexto = objTexto.get_rect()
-    rectTexto.topleft = (x, y)
-    janela.blit(objTexto, rectTexto)
-
-
 pygame.init()
 relogio = pygame.time.Clock()
 janela = pygame.display.set_mode((Constantes.LARGURAJANELA, Constantes.ALTURAJANELA))
@@ -117,10 +36,10 @@ somRecorde = pygame.mixer.Sound('blaster-2-81267.mp3')
 somTiro = pygame.mixer.Sound('metal-blade-slice-26-195295.mp3')
 pygame.mixer.music.load('the-happy-end-of-a-vintage-western-147522.mp3')
 
-colocarTexto('The siegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
-colocarTexto('Pressione uma tecla para começar.', fonte, janela, Constantes.LARGURAJANELA / 20, Constantes.ALTURAJANELA / 2)
+Procedimentos.colocarTexto('The siegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
+Procedimentos.colocarTexto('Pressione uma tecla para começar.', fonte, janela, Constantes.LARGURAJANELA / 20, Constantes.ALTURAJANELA / 2)
 pygame.display.update()
-aguardarEntrada()
+Procedimentos.aguardarEntrada()
 recorde = 0
 
 while True:
@@ -135,7 +54,7 @@ while True:
 
     posX = Constantes.LARGURAJANELA / 2
     posY = Constantes.ALTURAJANELA - 50
-    jogador = Personagem(imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
+    jogador = Classes.Personagem(imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
 
     while deve_continuar:
         pontuacao += 1
@@ -144,10 +63,10 @@ while True:
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
-                terminar()
+                Procedimentos.terminar()
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:
-                    terminar()
+                    Procedimentos.terminar()
                 if evento.key == pygame.K_a:
                     teclas['esquerda'] = True
                 if evento.key == pygame.K_d:
@@ -197,15 +116,15 @@ while True:
 
         janela.blit(imagemFundoRedim, (0, 0))
 
-        colocarTexto('Pontuação: ' + str(pontuacao), fonte, janela, 10, 0)
-        colocarTexto('Recorde: ' + str(recorde), fonte, janela, 10, 40)
+        Procedimentos.colocarTexto('Pontuação: ' + str(pontuacao), fonte, janela, 10, 0)
+        Procedimentos.colocarTexto('Recorde: ' + str(recorde), fonte, janela, 10, 40)
 
         contador += 1
         if contador >= Constantes.ITERACOES:
             contador = 0
             tamInimigo = random.randint(Constantes.TAMMINIMO, Constantes.TAMMAXIMO)
-            pos_x, pos_y = calcular_posicao_inicial()
-            inimigo = Inimigo(imagemInimigo, pos_x, pos_y, tamInimigo, random.randint(Constantes.VELMINIMA, Constantes.VELMAXIMA))
+            pos_x, pos_y = Procedimentos.calcular_posicao_inicial()
+            inimigo = Classes.Inimigo(imagemInimigo, pos_x, pos_y, tamInimigo, random.randint(Constantes.VELMINIMA, Constantes.VELMAXIMA))
             inimigos.append(inimigo)
 
         for inimigo in inimigos:
@@ -248,8 +167,8 @@ while True:
 
     pygame.mixer.music.stop()
     somFinal.play()
-    colocarTexto('GAME OVER', fonte, janela, (Constantes.LARGURAJANELA / 3), (Constantes.ALTURAJANELA / 3))
-    colocarTexto('Pressione uma tecla para jogar.', fonte, janela, (Constantes.LARGURAJANELA / 10), (Constantes.ALTURAJANELA / 2))
+    Procedimentos.colocarTexto('GAME OVER', fonte, janela, (Constantes.LARGURAJANELA / 3), (Constantes.ALTURAJANELA / 3))
+    Procedimentos.colocarTexto('Pressione uma tecla para jogar.', fonte, janela, (Constantes.LARGURAJANELA / 10), (Constantes.ALTURAJANELA / 2))
     pygame.display.update()
-    aguardarEntrada()
+    Procedimentos.aguardarEntrada()
     somFinal.stop()

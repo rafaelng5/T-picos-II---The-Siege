@@ -1,5 +1,6 @@
 import Constantes
 import math
+import pygame
 import random
 
 def calcular_posicao_inicial():
@@ -25,3 +26,25 @@ def calcular_angulo(jogador, inimigo):
     delta_x = jogador.rect.centerx - inimigo.rect.centerx
     delta_y = jogador.rect.centery - inimigo.rect.centery
     return math.atan2(delta_y, delta_x)
+
+def terminar():
+    pygame.quit()
+    exit()
+
+
+def aguardarEntrada():
+    while True:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                terminar()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    terminar()
+                return
+            
+
+def colocarTexto(texto, fonte, janela, x, y):
+    objTexto = fonte.render(texto, True, Constantes.CORTEXTO)
+    rectTexto = objTexto.get_rect()
+    rectTexto.topleft = (x, y)
+    janela.blit(objTexto, rectTexto)
