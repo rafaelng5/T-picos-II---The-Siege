@@ -3,12 +3,37 @@ import random
 import math
 import Constantes
 import Procedimentos
+import Surfaces
+
 
 class Personagem:
-    def __init__(self, imagem, pos_x, pos_y, largura, altura, velocidade):
+    def __init__(self, imagem, pos_x, pos_y, largura, altura, velocidade, surfaces:Surfaces, startx, starty, speed):
+        super().__init__(surfaces[0], startx, starty, 1)
         self.imagem = imagem
         self.rect = pygame.Rect(pos_x, pos_y, largura, altura)
-        self.velocidade = velocidade
+        self.velocidade = velocidade                            
+        self.fly_cycle = surfaces
+        self.animation_index = 0
+        self.delay = 0
+        self.jet_delay = 7
+        self.objRect.center = (startx, starty+10)  # correct positioning 
+        
+        self.speed = speed      # velocidade da nave       
+      
+           
+
+        
+        
+    def fly_animation(self):
+        self.surf = self.fly_cycle[self.animation_index]        
+        
+        if self.animation_index < len(self.fly_cycle)-1:
+            self.delay += 1
+            if self.delay > self.jet_delay:
+                self.animation_index += 1
+                self.delay = 0
+        else:
+            self.animation_index = 0  
 
     def mover(self, teclas, dim_janela):
         borda_esquerda = 0
@@ -23,6 +48,7 @@ class Personagem:
             self.rect.y -= self.velocidade
         if teclas['baixo'] and self.rect.bottom < borda_inferior:
             self.rect.y += self.velocidade
+      
 
 class Inimigo:
     def __init__(self, imagem, pos_x, pos_y, tamanho, velocidade):
@@ -36,3 +62,7 @@ class Inimigo:
         vel_y = self.velocidade * math.sin(angulo)
         self.rect.x += vel_x
         self.rect.y += vel_y
+        
+        
+        
+        
