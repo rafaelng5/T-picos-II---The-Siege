@@ -7,18 +7,19 @@ import Surfaces
 
 
 class Personagem:
-    def __init__(self, imagem, pos_x, pos_y, largura, altura, velocidade, surfaces:Surfaces, startx, starty, speed):
-        super().__init__(surfaces[0], startx, starty, 1)
+    #surfaces:Surfaces, startx, starty, speed
+    def __init__(self, imagem, pos_x, pos_y, largura, altura, velocidade):
+        #super().__init__(surfaces[0], startx, starty, 1)
         self.imagem = imagem
         self.rect = pygame.Rect(pos_x, pos_y, largura, altura)
         self.velocidade = velocidade                            
-        self.fly_cycle = surfaces
+        #self.fly_cycle = surfaces
         self.animation_index = 0
         self.delay = 0
         self.jet_delay = 7
-        self.objRect.center = (startx, starty+10)  # correct positioning 
+        #self.objRect.center = (startx, starty+10)  # correct positioning 
         
-        self.speed = speed      # velocidade da nave       
+        #self.speed = speed      # velocidade da nave       
       
            
 

@@ -46,12 +46,12 @@ while True:
     posY = Constantes.ALTURAJANELA - 50
     
     jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
-    disp_size = (800, 600)
-    surfaces = Surfaces(disp_size)
-    startx = 50
-    starty = 50
-    speed = 1
-    jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR, surfaces, startx, starty, speed)
+    #disp_size = (800, 600)
+    #surfaces = Surfaces(disp_size)
+    #startx = 50
+    #starty = 50
+    #speed = 1
+    jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
 
     while deve_continuar:
         pontuacao += 1
