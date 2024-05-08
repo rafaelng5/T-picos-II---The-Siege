@@ -6,6 +6,9 @@ import Procedimentos
 import Classes
 import LoadImages
 import LoadSoud
+import Surfaces
+
+
 
 Constantes.LARGURAPERSONAGEM = LoadImages.imagemPersonagem.get_width()
 Constantes.ALTURAPERSONAGEM = LoadImages.imagemPersonagem.get_height()
@@ -23,7 +26,6 @@ imagemFundoRedim = pygame.transform.scale(LoadImages.imagemFundo, (Constantes.LA
 fonte = pygame.font.Font(None, 48)
 
 pygame.mixer.music.load('Sons\\the-happy-end-of-a-vintage-western-147522.mp3')
-
 Procedimentos.colocarTexto('The siegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
 Procedimentos.colocarTexto('Pressione uma tecla para começar.', fonte, janela, Constantes.LARGURAJANELA / 20, Constantes.ALTURAJANELA / 2)
 pygame.display.update()
@@ -42,7 +44,14 @@ while True:
 
     posX = Constantes.LARGURAJANELA / 2
     posY = Constantes.ALTURAJANELA - 50
+    
     jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
+    disp_size = (800, 600)
+    surfaces = Surfaces(disp_size)
+    startx = 50
+    starty = 50
+    speed = 1
+    jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR, surfaces, startx, starty, speed)
 
     while deve_continuar:
         pontuacao += 1
