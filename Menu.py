@@ -230,7 +230,7 @@ def run_menu2():
 
 
 def launcher(w,h):        
-    image = Image.open("images/space.jpg")
+    image = Image.open("imagens/space.jpg")
     background_image = CTkImage(image, size=(w,h))
     
     bg_lbl = CTkLabel(settings.menu, text="", image=background_image)

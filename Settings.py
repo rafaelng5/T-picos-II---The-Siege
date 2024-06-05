@@ -24,11 +24,7 @@ class Settings:
         self.window = pygame.display.set_mode(self.disp_size)
         pygame.display.set_caption(name)
 
-        if self.fullscreen:
-            self.screen = pygame.display.set_mode((1600, 900), pygame.FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((1600, 900))
-
+        if self.fullscreen: pygame.display.toggle_fullscreen()
         
         # Configurando a fonte.        
         self.font_size = 48 
@@ -72,17 +68,17 @@ class Settings:
 
     def load_images(self):        
         #carregando e redimensionando a imagem de fundo.
-        imagemFundo = pygame.image.load('images/space0.png').convert()
+        imagemFundo = pygame.image.load('imagens/space2.png').convert()
         self.imagemFundo = pygame.transform.scale(imagemFundo, self.disp_size)
         
         # Carregando as imagens.       
-        surf_ship = pygame.image.load('images/ship.png')
-        surf_ship2 = pygame.image.load('images/ship2.png')
-        surf_ship3 = pygame.image.load('images/ship3.png')
+        surf_ship = pygame.image.load('imagens/nave.png')
+        surf_ship2 = pygame.image.load('imagens/nave.png')
+        surf_ship3 = pygame.image.load('imagens/nave.png')
         surf_ship = [surf_ship, surf_ship3, surf_ship2]        
         
         # asteroids sprite map
-        original_map = pygame.image.load('sprites/asteroids-arcade.png').convert_alpha()        
+        original_map = pygame.image.load('imagens/asteroids.png').convert_alpha()        
         surf_asteroids = Settings.get_sub_surfs(original_map, 66,194,(58,61),(65,0),3)
         
         # enemy rocket        
