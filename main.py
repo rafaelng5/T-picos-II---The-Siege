@@ -18,7 +18,7 @@ Constantes.ALTURAESPADA = LoadImages.imagemEspada.get_height()
 pygame.init()
 relogio = pygame.time.Clock()
 janela = pygame.display.set_mode((Constantes.LARGURAJANELA, Constantes.ALTURAJANELA))
-pygame.display.set_caption('The siegE')
+pygame.display.set_caption('The SiegE')
 
 pygame.mouse.set_visible(False)
 imagemFundoRedim = pygame.transform.scale(LoadImages.imagemFundo, (Constantes.LARGURAJANELA, Constantes.ALTURAJANELA))
@@ -26,7 +26,7 @@ imagemFundoRedim = pygame.transform.scale(LoadImages.imagemFundo, (Constantes.LA
 fonte = pygame.font.Font(None, 48)
 
 pygame.mixer.music.load('Sons\\the-happy-end-of-a-vintage-western-147522.mp3')
-Procedimentos.colocarTexto('The siegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
+Procedimentos.colocarTexto('The SiegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
 Procedimentos.colocarTexto('Pressione uma tecla para começar.', fonte, janela, Constantes.LARGURAJANELA / 20, Constantes.ALTURAJANELA / 2)
 pygame.display.update()
 Procedimentos.aguardarEntrada()
