@@ -1,21 +1,21 @@
 import pygame
 import random
-import math
 import Constantes
 import Procedimentos
 import Classes
 import LoadImages
 import LoadSoud
-import Surfaces
 import customtkinter as ctk
 from PIL import Image, ImageTk
 
-# Variáveis globais para volumes
+# Variáveis globais para volumes e pontuações
 volume_musica = 0.5
 volume_efeitos = 0.5
+pontuacoes = []
 
 # Função para iniciar o jogo
 def iniciar_jogo():
+    global pontuacoes
     Constantes.LARGURAPERSONAGEM = LoadImages.imagemPersonagem.get_width()
     Constantes.ALTURAPERSONAGEM = LoadImages.imagemPersonagem.get_height()
     Constantes.LARGURAESPADA = LoadImages.imagemEspada.get_width()
@@ -65,7 +65,8 @@ def iniciar_jogo():
                     Procedimentos.terminar()
                 if evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_ESCAPE:
-                        Procedimentos.terminar()
+                        deve_continuar = False
+                        mostrar_pausa(janela)
                     if evento.key == pygame.K_a:
                         teclas['esquerda'] = True
                     if evento.key == pygame.K_d:
@@ -171,18 +172,35 @@ def iniciar_jogo():
         pygame.mixer.music.stop()
         LoadSoud.somFinal.play()
         LoadSoud.somFinal.set_volume(volume_efeitos)
+        pontuacoes.append(pontuacao)
+        pontuacoes = sorted(pontuacoes, reverse=True)[:5]  # Mantém apenas as 5 melhores pontuações
         Procedimentos.colocarTexto('GAME OVER', fonte, janela, (Constantes.LARGURAJANELA / 3), (Constantes.ALTURAJANELA / 3))
         Procedimentos.colocarTexto('Pressione uma tecla para jogar.', fonte, janela, (Constantes.LARGURAJANELA / 10), (Constantes.ALTURAJANELA / 2))
         pygame.display.update()
         Procedimentos.aguardarEntrada()
         LoadSoud.somFinal.stop()
-
-# Função para sair do jogo
+        
 def sair_jogo():
     root.quit()
 
-# Função para abrir a janela de configurações
+def mostrar_pausa(janela):
+    fonte = pygame.font.Font(None, 48)
+    Procedimentos.colocarTexto('PAUSE', fonte, janela, (Constantes.LARGURAJANELA / 2.5), (Constantes.ALTURAJANELA / 3))
+    Procedimentos.colocarTexto('Pressione ESC para continuar.', fonte, janela, (Constantes.LARGURAJANELA / 8), (Constantes.ALTURAJANELA / 2))
+    Procedimentos.colocarTexto('Pressione Q para voltar ao menu.', fonte, janela, (Constantes.LARGURAJANELA / 8), (Constantes.ALTURAJANELA / 1.5))
+    pygame.display.update()
+    while True:
+        for evento in pygame.event.get():
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    return
+                if evento.key == pygame.K_q:
+                    pygame.quit()
+                    return
+
 def abrir_configuracoes():
+    global volume_musica, volume_efeitos
+
     config_window = ctk.CTkToplevel(root)
     config_window.title('Configurações')
     config_window.geometry('400x300')
@@ -219,6 +237,24 @@ def ajustar_volume_efeitos(valor):
     global volume_efeitos
     volume_efeitos = float(valor)
 
+def exibir_pontuacoes():
+    pontuacoes_window = ctk.CTkToplevel(root)
+    pontuacoes_window.title('Pontuações')
+    pontuacoes_window.geometry('400x300')
+
+    def voltar_menu():
+        pontuacoes_window.destroy()
+
+    pontuacoes_label = ctk.CTkLabel(pontuacoes_window, text="Melhores Pontuações", font=("arial", 20))
+    pontuacoes_label.pack(pady=10)
+
+    for idx, pontuacao in enumerate(pontuacoes, start=1):
+        pontuacao_label = ctk.CTkLabel(pontuacoes_window, text=f"{idx}. {pontuacao}")
+        pontuacao_label.pack(pady=5)
+
+    botao_voltar = ctk.CTkButton(pontuacoes_window, text='Voltar', command=voltar_menu)
+    botao_voltar.pack(pady=20)
+
 # Configuração da janela do menu com customtkinter
 root = ctk.CTk()
 root.title('Menu do Jogo')
@@ -237,6 +273,9 @@ botao_iniciar.pack(pady=10)
 
 botao_configuracoes = ctk.CTkButton(root, text='Configurações', command=abrir_configuracoes)
 botao_configuracoes.pack(pady=10)
+
+botao_pontuacoes = ctk.CTkButton(root, text='Pontuações', command=exibir_pontuacoes)
+botao_pontuacoes.pack(pady=10)
 
 botao_sair = ctk.CTkButton(root, text='Sair', command=sair_jogo)
 botao_sair.pack(pady=10)
