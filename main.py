@@ -179,9 +179,11 @@ def iniciar_jogo():
         pygame.display.update()
         Procedimentos.aguardarEntrada()
         LoadSoud.somFinal.stop()
-        
+
 def sair_jogo():
     root.quit()
+
+
 
 def mostrar_pausa(janela):
     fonte = pygame.font.Font(None, 48)
@@ -204,6 +206,8 @@ def abrir_configuracoes():
     config_window = ctk.CTkToplevel(root)
     config_window.title('Configurações')
     config_window.geometry('400x300')
+    config_window.grab_set()  # Torna a janela modal
+    config_window.lift()  # Traz a janela à frente
 
     def voltar_menu():
         config_window.destroy()
@@ -241,6 +245,8 @@ def exibir_pontuacoes():
     pontuacoes_window = ctk.CTkToplevel(root)
     pontuacoes_window.title('Pontuações')
     pontuacoes_window.geometry('400x300')
+    pontuacoes_window.grab_set()  # Torna a janela modal
+    pontuacoes_window.lift()  # Traz a janela à frente
 
     def voltar_menu():
         pontuacoes_window.destroy()
