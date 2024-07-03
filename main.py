@@ -10,6 +10,11 @@ import Surfaces
 import customtkinter as ctk
 from PIL import Image, ImageTk
 
+# Variáveis globais para volumes
+volume_musica = 0.5
+volume_efeitos = 0.5
+
+# Função para iniciar o jogo
 def iniciar_jogo():
     Constantes.LARGURAPERSONAGEM = LoadImages.imagemPersonagem.get_width()
     Constantes.ALTURAPERSONAGEM = LoadImages.imagemPersonagem.get_height()
@@ -27,6 +32,7 @@ def iniciar_jogo():
     fonte = pygame.font.Font(None, 48)
 
     pygame.mixer.music.load('Sons\\the-happy-end-of-a-vintage-western-147522.mp3')
+    pygame.mixer.music.set_volume(volume_musica)
     Procedimentos.colocarTexto('The SiegE', fonte, janela, Constantes.LARGURAJANELA / 5, Constantes.ALTURAJANELA / 3)
     Procedimentos.colocarTexto('Pressione uma tecla para começar.', fonte, janela, Constantes.LARGURAJANELA / 20, Constantes.ALTURAJANELA / 2)
     pygame.display.update()
@@ -47,17 +53,12 @@ def iniciar_jogo():
         posY = Constantes.ALTURAJANELA - 50
         
         jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
-        #disp_size = (800, 600)
-        #surfaces = Surfaces(disp_size)
-        #startx = 50
-        #starty = 50
-        #speed = 1
-        jogador = Classes.Personagem(LoadImages.imagemPersonagem, posX, posY, Constantes.LARGURAPERSONAGEM, Constantes.ALTURAPERSONAGEM, Constantes.VELJOGADOR)
-
+        
         while deve_continuar:
             pontuacao += 1
             if pontuacao == recorde:
                 LoadSoud.somRecorde.play()
+                LoadSoud.somRecorde.set_volume(volume_efeitos)
 
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
@@ -80,6 +81,7 @@ def iniciar_jogo():
                                 'vel': (0, -15)}
                         espadas.append(espada)
                         LoadSoud.somTiro.play()
+                        LoadSoud.somTiro.set_volume(volume_efeitos)
                     if evento.key == pygame.K_RIGHT:
                         espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
@@ -87,6 +89,7 @@ def iniciar_jogo():
                                 'vel': (15, 0)}
                         espadas.append(espada)
                         LoadSoud.somTiro.play()
+                        LoadSoud.somTiro.set_volume(volume_efeitos)
                     if evento.key == pygame.K_DOWN:
                         espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
@@ -94,6 +97,7 @@ def iniciar_jogo():
                                 'vel': (0, 15)}
                         espadas.append(espada)
                         LoadSoud.somTiro.play()
+                        LoadSoud.somTiro.set_volume(volume_efeitos)
                     if evento.key == pygame.K_LEFT:
                         espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
@@ -101,6 +105,7 @@ def iniciar_jogo():
                                 'vel': (-15, 0)}
                         espadas.append(espada)
                         LoadSoud.somTiro.play()
+                        LoadSoud.somTiro.set_volume(volume_efeitos)
 
                 if evento.type == pygame.KEYUP:
                     if evento.key == pygame.K_a:
@@ -165,6 +170,7 @@ def iniciar_jogo():
 
         pygame.mixer.music.stop()
         LoadSoud.somFinal.play()
+        LoadSoud.somFinal.set_volume(volume_efeitos)
         Procedimentos.colocarTexto('GAME OVER', fonte, janela, (Constantes.LARGURAJANELA / 3), (Constantes.ALTURAJANELA / 3))
         Procedimentos.colocarTexto('Pressione uma tecla para jogar.', fonte, janela, (Constantes.LARGURAJANELA / 10), (Constantes.ALTURAJANELA / 2))
         pygame.display.update()
@@ -175,6 +181,44 @@ def iniciar_jogo():
 def sair_jogo():
     root.quit()
 
+# Função para abrir a janela de configurações
+def abrir_configuracoes():
+    config_window = ctk.CTkToplevel(root)
+    config_window.title('Configurações')
+    config_window.geometry('400x300')
+
+    def voltar_menu():
+        config_window.destroy()
+
+    # Slider para ajustar o volume da música
+    volume_musica_label = ctk.CTkLabel(config_window, text="Volume da Música")
+    volume_musica_label.pack(pady=10)
+
+    volume_musica_slider = ctk.CTkSlider(config_window, from_=0, to=1, command=ajustar_volume_musica)
+    volume_musica_slider.set(volume_musica)
+    volume_musica_slider.pack(pady=10)
+
+    # Slider para ajustar o volume dos efeitos sonoros
+    volume_efeitos_label = ctk.CTkLabel(config_window, text="Volume dos Efeitos Sonoros")
+    volume_efeitos_label.pack(pady=10)
+
+    volume_efeitos_slider = ctk.CTkSlider(config_window, from_=0, to=1, command=ajustar_volume_efeitos)
+    volume_efeitos_slider.set(volume_efeitos)
+    volume_efeitos_slider.pack(pady=10)
+
+    # Botão para voltar ao menu principal
+    botao_voltar = ctk.CTkButton(config_window, text='Voltar', command=voltar_menu)
+    botao_voltar.pack(pady=20)
+
+def ajustar_volume_musica(valor):
+    global volume_musica
+    volume_musica = float(valor)
+    pygame.mixer.music.set_volume(volume_musica)
+
+def ajustar_volume_efeitos(valor):
+    global volume_efeitos
+    volume_efeitos = float(valor)
+
 # Configuração da janela do menu com customtkinter
 root = ctk.CTk()
 root.title('Menu do Jogo')
@@ -182,17 +226,19 @@ root.geometry('1000x1000')
 
 # Carregar e exibir uma imagem com PIL
 imagem = Image.open('Imagens\\fundo.jpg')
-imagem = imagem.resize((520, 400), Image.LANCZOS)  # Use Image.LANCZOS em vez de Image.ANTIALIAS
+imagem = imagem.resize((520, 400), Image.LANCZOS)
 photo = ImageTk.PhotoImage(imagem)
-label_imagem = ctk.CTkLabel(root,font=("arial",48), text= "The SiegE", image=photo)
+label_imagem = ctk.CTkLabel(root, font=("arial", 48), text="The SiegE", image=photo)
 label_imagem.pack(pady=20)
 
 # Botões do menu
 botao_iniciar = ctk.CTkButton(root, text='Iniciar Jogo', command=iniciar_jogo)
 botao_iniciar.pack(pady=10)
 
+botao_configuracoes = ctk.CTkButton(root, text='Configurações', command=abrir_configuracoes)
+botao_configuracoes.pack(pady=10)
+
 botao_sair = ctk.CTkButton(root, text='Sair', command=sair_jogo)
 botao_sair.pack(pady=10)
 
 root.mainloop()
-
