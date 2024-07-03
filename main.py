@@ -76,7 +76,7 @@ def iniciar_jogo():
                     if evento.key == pygame.K_s:
                         teclas['baixo'] = True
                     if evento.key == pygame.K_UP:
-                        espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.top, Constantes.LARGURAESPADA,
+                        espada = {'objRect': pygame.Rect(jogador.rect.centerx - 32, jogador.rect.top - 50, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
                                 'imagem': LoadImages.imagemEspada,
                                 'vel': (0, -15)}
@@ -84,7 +84,7 @@ def iniciar_jogo():
                         LoadSoud.somTiro.play()
                         LoadSoud.somTiro.set_volume(volume_efeitos)
                     if evento.key == pygame.K_RIGHT:
-                        espada = {'objRect': pygame.Rect(jogador.rect.right, jogador.rect.centery, Constantes.LARGURAESPADA,
+                        espada = {'objRect': pygame.Rect(jogador.rect.right - 20, jogador.rect.centery - 30, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
                                 'imagem': LoadImages.imagemEspadaDireita,
                                 'vel': (15, 0)}
@@ -92,7 +92,7 @@ def iniciar_jogo():
                         LoadSoud.somTiro.play()
                         LoadSoud.somTiro.set_volume(volume_efeitos)
                     if evento.key == pygame.K_DOWN:
-                        espada = {'objRect': pygame.Rect(jogador.rect.centerx, jogador.rect.bottom, Constantes.LARGURAESPADA,
+                        espada = {'objRect': pygame.Rect(jogador.rect.centerx - 32, jogador.rect.bottom - 15, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
                                 'imagem': LoadImages.imagemEspadaBaixo,
                                 'vel': (0, 15)}
@@ -100,7 +100,7 @@ def iniciar_jogo():
                         LoadSoud.somTiro.play()
                         LoadSoud.somTiro.set_volume(volume_efeitos)
                     if evento.key == pygame.K_LEFT:
-                        espada = {'objRect': pygame.Rect(jogador.rect.left, jogador.rect.centery, Constantes.LARGURAESPADA,
+                        espada = {'objRect': pygame.Rect(jogador.rect.left - 35, jogador.rect.centery - 30, Constantes.LARGURAESPADA,
                                                         Constantes.ALTURAESPADA),
                                 'imagem': LoadImages.imagemEspadaEsquerda, 
                                 'vel': (-15, 0)}
