@@ -3,10 +3,8 @@ from pygame import Surface
 
 class Surfaces():
     def __init__(self, disp_size):
-        # Carregando as imagens.
         self.surf_ship = pygame.image.load('Sprites\personagem-cima-3.png')
 
-        # asteroids
         self.exp_seq = pygame.image.load('Sprites\pngegg (3).png').convert_alpha()
         self.surf_asteroids = self.get_sub_surfs(self.exp_seq, 66, 194, (58, 61), (65, 0), 3)
 
@@ -15,14 +13,12 @@ class Surfaces():
             198 + 4 > self.exp_seq.get_width() or
             72 + 8 > self.exp_seq.get_height()):
             print("Erro: Coordenadas ou dimensões inválidas para subsuperfície")
-            # Tratar o caso de coordenadas ou dimensões inválidas aqui
-            # Por exemplo, pode ser útil definir self.surf_fire como None
+   
             self.surf_fire = None
         else:
             self.surf_fire = self.exp_seq.subsurface((198, 72), (4, 8))
             self.surf_fire = pygame.transform.rotozoom(self.surf_fire, 0, 3)
 
-        # Impressões de debug para verificar as dimensões da superfície original e as coordenadas e dimensões para surf_rocket
         print("Dimensões da superfície original:", self.exp_seq.get_width(), "x", self.exp_seq.get_height())
         print("Coordenadas para surf_rocket:", (173, 48))
         print("Dimensões para surf_rocket:", (6, 12))
