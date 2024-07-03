@@ -184,7 +184,7 @@ root.geometry('1000x1000')
 imagem = Image.open('Imagens\\fundo.jpg')
 imagem = imagem.resize((520, 400), Image.LANCZOS)  # Use Image.LANCZOS em vez de Image.ANTIALIAS
 photo = ImageTk.PhotoImage(imagem)
-label_imagem = ctk.CTkLabel(root, image=photo)
+label_imagem = ctk.CTkLabel(root,font=("arial",48), text= "The SiegE", image=photo)
 label_imagem.pack(pady=20)
 
 # Botões do menu
