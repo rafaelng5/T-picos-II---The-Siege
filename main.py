@@ -65,7 +65,6 @@ def iniciar_jogo():
                     Procedimentos.terminar()
                 if evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_ESCAPE:
-                        deve_continuar = False
                         mostrar_pausa(janela)
                     if evento.key == pygame.K_a:
                         teclas['esquerda'] = True
